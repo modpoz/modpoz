@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="fa">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1080" />
+    <script src="assets/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Vazirmatn";
+        src: url("assets/Vazirmatn-Black.woff2") format("woff2");
+        font-weight: 900;
+      }
+      :root {
+        --bg-deep: #1c0b06;
+        --bg-mid: #3a170b;
+        --bg-warm: #6b2a10;
+        --fg: #fbebd3;
+        --accent: #f4a23a;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--bg-deep);
+      }
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1080px;
+        overflow: hidden;
+      }
+      #scene {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        background: radial-gradient(
+          ellipse 78% 70% at 32% 40%,
+          var(--bg-warm) 0%,
+          var(--bg-mid) 46%,
+          var(--bg-deep) 100%
+        );
+      }
+      #camera {
+        position: absolute;
+        inset: 0;
+        transform-origin: 40% 55%;
+        will-change: transform;
+      }
+      .layer {
+        position: absolute;
+        inset: 0;
+      }
+
+      /* ── background ── */
+      #sun {
+        position: absolute;
+        left: -260px;
+        top: -300px;
+        width: 900px;
+        height: 900px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgb(255 178 92 / 42%) 0%, rgb(255 120 40 / 14%) 45%, transparent 70%);
+      }
+      .bokeh {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(5px);
+        will-change: transform, opacity;
+      }
+      #ghost {
+        position: absolute;
+        right: -30px;
+        top: -90px;
+        font-family: "Vazirmatn", sans-serif;
+        font-weight: 900;
+        font-size: 270px;
+        line-height: 1;
+        color: var(--accent);
+        opacity: 0.12;
+        direction: rtl;
+        white-space: nowrap;
+      }
+      #ground {
+        position: absolute;
+        left: -60px;
+        right: -60px;
+        bottom: -40px;
+        height: 330px;
+        background: radial-gradient(ellipse 70% 60% at 40% 100%, rgb(20 7 3 / 92%) 0%, rgb(28 11 6 / 55%) 55%, transparent 80%);
+      }
+      .leaf {
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: block;
+        will-change: transform;
+      }
+      .leaf svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+      }
+
+      /* ── product ── */
+      #glow {
+        position: absolute;
+        left: -120px;
+        top: 130px;
+        width: 760px;
+        height: 900px;
+        border-radius: 50%;
+        background: radial-gradient(ellipse at 50% 46%, rgb(232 112 28 / 100%) 0%, rgb(190 70 14 / 55%) 38%, transparent 70%);
+        opacity: 0;
+      }
+      #shadow {
+        position: absolute;
+        left: 70px;
+        bottom: 66px;
+        width: 440px;
+        height: 54px;
+        border-radius: 50%;
+        background: radial-gradient(ellipse, rgb(8 3 1 / 80%) 0%, rgb(8 3 1 / 40%) 50%, transparent 72%);
+        transform-origin: 50% 50%;
+      }
+      #product-wrap {
+        position: absolute;
+        left: 64px;
+        bottom: 78px;
+        width: 437px;
+        height: 800px;
+      }
+      #product-float {
+        width: 100%;
+        height: 100%;
+        transform-origin: 50% 100%;
+      }
+      #product-float img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        filter: drop-shadow(0 18px 30px rgb(10 4 2 / 55%));
+      }
+
+      /* ── copy ── */
+      #copy {
+        position: absolute;
+        right: 72px;
+        top: 214px;
+        width: 480px;
+        direction: rtl;
+        text-align: right;
+        font-family: "Vazirmatn", sans-serif;
+        font-weight: 900;
+        color: var(--fg);
+        text-shadow: 0 6px 28px rgb(20 8 4 / 70%);
+      }
+      .line {
+        display: block;
+        font-size: 112px;
+        line-height: 1.62;
+        white-space: nowrap;
+      }
+      .word {
+        display: inline-block;
+        opacity: 0;
+      }
+      .line.accent {
+        color: var(--accent);
+      }
+      #rule {
+        display: block;
+        width: 300px;
+        height: 5px;
+        margin: 6px 0 0 auto;
+        border-radius: 3px;
+        background: var(--accent);
+        transform-origin: 100% 50%;
+      }
+      #brand {
+        display: block;
+        margin-top: 24px;
+        direction: ltr;
+        text-align: right;
+        font-family: "Montserrat", sans-serif;
+        font-weight: 600;
+        font-size: 27px;
+        letter-spacing: 0.2em;
+        color: var(--fg);
+        opacity: 0;
+      }
+
+      /* ── light leak (from registry block organic-light-leak-overlay, inlined for 1:1) ── */
+      #leak {
+        position: absolute;
+        inset: -16%;
+        opacity: 0;
+        overflow: hidden;
+        pointer-events: none;
+        mix-blend-mode: screen;
+      }
+      #leak .leak-layer {
+        position: absolute;
+        inset: -20%;
+        will-change: opacity, transform;
+      }
+      #leak .leak-amber {
+        background:
+          radial-gradient(ellipse 52% 110% at 10% 58%, rgb(255 241 197 / 92%), transparent 45%),
+          radial-gradient(ellipse 72% 120% at 24% 54%, rgb(255 126 57 / 78%), transparent 66%);
+        filter: blur(28px);
+      }
+      #leak .leak-red {
+        background: radial-gradient(ellipse 58% 105% at 78% 34%, rgb(255 79 61 / 60%), rgb(255 44 92 / 20%) 48%, transparent 76%);
+        filter: blur(40px);
+      }
+      #leak .leak-gold {
+        background: linear-gradient(
+          104deg,
+          transparent 24%,
+          rgb(255 144 62 / 30%) 40%,
+          rgb(255 247 205 / 60%) 51%,
+          rgb(255 124 48 / 22%) 62%,
+          transparent 78%
+        );
+        filter: blur(20px);
+      }
+
+      /* ── grain (from registry component grain-overlay, timeline-driven) ── */
+      #grain {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        pointer-events: none;
+      }
+      #grain .grain-texture {
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        opacity: 0.13;
+      }
+    </style>
+  </head>
+  <body>
+    <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+      <defs>
+        <symbol id="leaf-maple" viewBox="0 0 100 100">
+          <path
+            d="M50 2 L56 20 L66 12 L64 30 L80 24 L74 40 L94 42 L80 54 L90 62 L68 64 L72 80 L56 72 L52 98 L48 98 L44 72 L28 80 L32 64 L10 62 L20 54 L6 42 L26 40 L20 24 L36 30 L34 12 L44 20 Z"
+          />
+          <path d="M50 92 L50 14 M50 62 L76 32 M50 62 L24 32 M50 72 L70 64 M50 72 L30 64" fill="none" stroke="rgb(60 20 5 / 35%)" stroke-width="2" />
+        </symbol>
+        <symbol id="leaf-oval" viewBox="0 0 100 100">
+          <path d="M50 2 C80 22 84 62 50 92 C16 62 20 22 50 2 Z" />
+          <path d="M50 100 L50 8 M50 40 L68 28 M50 40 L32 28 M50 60 L72 46 M50 60 L28 46" fill="none" stroke="rgb(60 20 5 / 35%)" stroke-width="2" />
+        </symbol>
+        <symbol id="leaf-oak" viewBox="0 0 100 100">
+          <path
+            d="M50 2 C60 8 66 14 62 22 C72 20 76 30 68 36 C80 38 80 50 70 54 C80 60 76 72 64 70 C66 82 58 88 52 86 L52 98 L48 98 L48 86 C42 88 34 82 36 70 C24 72 20 60 30 54 C20 50 20 38 32 36 C24 30 28 20 38 22 C34 14 40 8 50 2 Z"
+          />
+          <path d="M50 92 L50 10" fill="none" stroke="rgb(60 20 5 / 35%)" stroke-width="2" />
+        </symbol>
+      </defs>
+    </svg>
+
+    <div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1080">
+      <div id="scene">
+        <div id="camera" data-layout-allow-overflow>
+          <div id="sun" data-layout-allow-overflow></div>
+          <div id="bokeh" class="layer" data-layout-allow-overflow></div>
+          <div id="ghost" data-layout-allow-overflow>پاییز</div>
+          <div id="leaves-back" class="layer" data-layout-allow-overflow></div>
+          <div id="ground" data-layout-allow-overflow></div>
+          <div id="pile-back" class="layer" data-layout-allow-overflow></div>
+
+          <div id="glow" data-layout-allow-overflow></div>
+          <div id="shadow"></div>
+          <div id="product-wrap">
+            <div id="product-float">
+              <img src="assets/peelshot-cutout.png" alt="Dr.Melaxin Peel Shot" />
+            </div>
+          </div>
+          <div id="pile-front" class="layer" data-layout-allow-overflow></div>
+
+          <div id="copy">
+            <span class="line"><span class="word" id="w1">درخشش</span></span>
+            <span class="line"><span class="word" id="w2">پاییزی</span></span>
+            <span class="line accent"><span class="word" id="w3">پوست</span> <span class="word" id="w4">تو</span></span>
+            <span id="rule"></span>
+            <span id="brand">DR.MELAXIN · PEEL SHOT</span>
+          </div>
+
+          <div id="leaves-front" class="layer" data-layout-allow-overflow></div>
+          <div id="leak" aria-hidden="true" data-layout-allow-overflow>
+            <div class="leak-layer leak-amber"></div>
+            <div class="leak-layer leak-red"></div>
+            <div class="leak-layer leak-gold"></div>
+          </div>
+        </div>
+        <div id="grain"><div class="grain-texture"></div></div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var DURATION = 5;
+        var W = 1080;
+        var H = 1080;
+        var TAU = Math.PI * 2;
+
+        // Seeded hash — every "random" value is a pure function of its index.
+        function prand(n) {
+          var x = Math.sin(n * 127.1 + 311.7) * 43758.5453;
+          return x - Math.floor(x);
+        }
+        function lerp(a, b, k) {
+          return a + (b - a) * k;
+        }
+        function clamp01(k) {
+          return k < 0 ? 0 : k > 1 ? 1 : k;
+        }
+        var easeOut2 = gsap.parseEase("power2.out");
+        var easeSine = gsap.parseEase("sine.inOut");
+
+        var LEAF_SHAPES = ["leaf-maple", "leaf-oval", "leaf-oak"];
+        var LEAF_COLORS = ["#c2410c", "#d9771f", "#b45309", "#e3a33b", "#9a3412", "#e0662a", "#c98a2b", "#7c2d12"];
+        var PILE_COLORS = ["#8a3410", "#9a3412", "#7c2d12", "#a8521a", "#6b250e", "#b4601f"];
+
+        function makeLeaf(parent, i, size, color, shape) {
+          var el = document.createElement("div");
+          el.className = "leaf";
+          el.style.width = size + "px";
+          el.style.height = size + "px";
+          el.innerHTML =
+            '<svg viewBox="0 0 100 100"><use href="#' + shape + '" fill="' + color + '"></use></svg>';
+          parent.appendChild(el);
+          return el;
+        }
+
+        // ── Static leaf bed the product sits on ──
+        var pileBack = document.getElementById("pile-back");
+        for (var p = 0; p < 46; p++) {
+          var ps = 54 + prand(p * 7 + 1) * 66;
+          var px = -50 + prand(p * 11 + 2) * (W + 40);
+          var py = 905 + prand(p * 13 + 3) * 150;
+          var pl = makeLeaf(pileBack, p, ps, PILE_COLORS[p % PILE_COLORS.length], LEAF_SHAPES[p % 3]);
+          pl.style.transform =
+            "translate(" + px + "px," + py + "px) rotate(" + Math.round(prand(p * 17 + 4) * 360) + "deg) scaleY(0.62)";
+        }
+        var pileFront = document.getElementById("pile-front");
+        for (var f = 0; f < 11; f++) {
+          var fs = 62 + prand(f * 19 + 5) * 48;
+          var fx = 20 + prand(f * 23 + 6) * 500;
+          var fy = 985 + prand(f * 29 + 7) * 70;
+          var fl = makeLeaf(pileFront, f, fs, LEAF_COLORS[(f * 3) % LEAF_COLORS.length], LEAF_SHAPES[(f + 1) % 3]);
+          fl.style.transform =
+            "translate(" + fx + "px," + fy + "px) rotate(" + Math.round(prand(f * 31 + 8) * 360) + "deg) scaleY(0.6)";
+        }
+
+        // ── Falling leaves: each one's whole flight is fixed here; position = f(t) ──
+        var MARGIN = 140;
+        var SPAN = H + MARGIN * 2;
+        function makeFallers(parent, count, seed, sizeMin, sizeMax, speedMin, speedMax, xMin, xMax) {
+          var list = [];
+          for (var i = 0; i < count; i++) {
+            var k = seed + i * 10;
+            var size = sizeMin + prand(k + 1) * (sizeMax - sizeMin);
+            list.push({
+              el: makeLeaf(parent, i, size, LEAF_COLORS[(i + seed) % LEAF_COLORS.length], LEAF_SHAPES[(i + seed) % 3]),
+              x0: xMin + prand(k + 2) * (xMax - xMin),
+              y0: prand(k + 3) * SPAN,
+              v: speedMin + prand(k + 4) * (speedMax - speedMin),
+              amp: 22 + prand(k + 5) * 46,
+              w: 1.1 + prand(k + 6) * 1.3,
+              ph: prand(k + 7) * TAU,
+              r0: prand(k + 8) * 360,
+              spin: (prand(k + 9) - 0.5) * 110,
+              flip: 1.4 + prand(k + 10) * 1.6,
+            });
+          }
+          return list;
+        }
+        var backFallers = makeFallers(document.getElementById("leaves-back"), 15, 100, 34, 72, 95, 190, -40, W + 10);
+        var frontFallers = makeFallers(document.getElementById("leaves-front"), 2, 900, 130, 170, 260, 320, -30, 520);
+        frontFallers.forEach(function (lf) {
+          lf.el.style.filter = "blur(5px)";
+        });
+
+        function placeFaller(lf, t) {
+          var y = ((lf.y0 + lf.v * t) % SPAN) - MARGIN;
+          var x = lf.x0 + Math.sin(lf.w * t + lf.ph) * lf.amp;
+          var r = lf.r0 + lf.spin * t;
+          var c = Math.cos(lf.flip * t + lf.ph);
+          var sx = (c < 0 ? -1 : 1) * Math.max(Math.abs(c), 0.22);
+          lf.el.style.transform =
+            "translate(" + x.toFixed(1) + "px," + y.toFixed(1) + "px) rotate(" + r.toFixed(1) + "deg) scaleX(" + sx.toFixed(3) + ")";
+        }
+
+        // ── Warm bokeh ──
+        var bokehLayer = document.getElementById("bokeh");
+        var bokeh = [];
+        for (var b = 0; b < 10; b++) {
+          var bs = 50 + prand(b * 37 + 11) * 130;
+          var el = document.createElement("div");
+          el.className = "bokeh";
+          el.style.width = bs + "px";
+          el.style.height = bs + "px";
+          el.style.left = Math.round(prand(b * 41 + 12) * (W - 60)) + "px";
+          el.style.top = Math.round(40 + prand(b * 43 + 13) * 620) + "px";
+          var warm = b % 2 === 0 ? "255 190 110" : "255 138 60";
+          el.style.background = "radial-gradient(circle, rgb(" + warm + " / 55%) 0%, rgb(" + warm + " / 18%) 55%, transparent 72%)";
+          bokehLayer.appendChild(el);
+          bokeh.push({ el: el, base: 0.35 + prand(b * 47 + 14) * 0.3, ph: prand(b * 53 + 15) * TAU, f: 0.5 + prand(b * 59 + 16) * 0.6 });
+        }
+
+        var camera = document.getElementById("camera");
+        var floatEl = document.getElementById("product-float");
+        var glow = document.getElementById("glow");
+        var ghost = document.getElementById("ghost");
+        var grain = document.querySelector("#grain .grain-texture");
+
+        // The one writer of every ambient property: a pure function of time.
+        function update(t) {
+          // multi-phase camera: pull back → hold → slow push, with Lissajous drift
+          var s;
+          if (t < 1.4) s = lerp(1.07, 1.0, easeOut2(t / 1.4));
+          else if (t < 3.0) s = 1.0;
+          else s = lerp(1.0, 1.035, easeSine(clamp01((t - 3.0) / 2.0)));
+          var dx = Math.sin(t * TAU * 0.16) * 6;
+          var dy = Math.sin(t * TAU * 0.16 * 1.3) * 5;
+          camera.style.transform = "scale(" + s.toFixed(4) + ") translate(" + dx.toFixed(2) + "px," + dy.toFixed(2) + "px)";
+
+          // product idle float (starts at rest: sin(0) = 0)
+          floatEl.style.transform =
+            "translateY(" + (Math.sin(t * 1.3) * -7).toFixed(2) + "px) rotate(" + (Math.sin(t * 0.9) * 0.6).toFixed(3) + "deg)";
+
+          // glow blooms onto the product's settle, then breathes
+          var go, gs;
+          if (t < 1.0) {
+            var k = easeOut2(clamp01((t - 0.1) / 0.9));
+            go = 0.34 * k;
+            gs = lerp(0.85, 1, k);
+          } else {
+            var bph = Math.sin(((t - 1.0) * TAU) / 3.0);
+            go = 0.34 + bph * 0.03;
+            gs = 1 + bph * 0.015;
+          }
+          glow.style.opacity = go.toFixed(3);
+          glow.style.transform = "scale(" + gs.toFixed(4) + ")";
+
+          for (var i = 0; i < bokeh.length; i++) {
+            var bk = bokeh[i];
+            var a = t * bk.f + bk.ph;
+            bk.el.style.transform = "translate(" + (Math.sin(a) * 18).toFixed(1) + "px," + (Math.cos(a * 0.8) * 12).toFixed(1) + "px)";
+            bk.el.style.opacity = (bk.base + Math.sin(a * 1.7) * 0.1).toFixed(3);
+          }
+
+          ghost.style.transform = "translateX(" + (-t * 7).toFixed(1) + "px)";
+
+          for (var j = 0; j < backFallers.length; j++) placeFaller(backFallers[j], t);
+          for (var m = 0; m < frontFallers.length; m++) placeFaller(frontFallers[m], t);
+
+          var frame = Math.floor(t * 12);
+          grain.style.transform =
+            "translate(" + ((prand(frame * 3 + 1) - 0.5) * 30).toFixed(1) + "%," + ((prand(frame * 5 + 2) - 0.5) * 30).toFixed(1) + "%)";
+        }
+
+        var tl = gsap.timeline({ paused: true });
+
+        var clock = { t: 0 };
+        tl.to(clock, { t: DURATION, duration: DURATION, ease: "none", onUpdate: function () { update(clock.t); } }, 0);
+
+        // Product arrives: rise + settle, contact shadow lands with it.
+        tl.fromTo("#product-wrap", { y: 110, opacity: 0, scale: 0.96 }, { y: 0, opacity: 1, scale: 1, duration: 0.95, ease: "power3.out" }, 0.05);
+        tl.fromTo("#shadow", { opacity: 0, scaleX: 0.6 }, { opacity: 1, scaleX: 1, duration: 0.9, ease: "power2.out" }, 0.15);
+
+        // Slogan: waterfall entry, words whip up from below, binary opacity.
+        var F = 1 / 30;
+        var t0 = 0.95;
+        tl.set("#w1", { opacity: 1, y: 80 }, t0);
+        tl.to("#w1", { y: 0, duration: 0.2, ease: "power4.out" }, t0);
+        var t1 = t0 + 0.2 + F;
+        tl.set("#w2", { opacity: 1, y: 70 }, t1);
+        tl.to("#w2", { y: 0, duration: 0.18, ease: "power4.out" }, t1);
+        var t2 = t1 + 0.18;
+        tl.set("#w3", { opacity: 1, y: 60 }, t2);
+        tl.to("#w3", { y: 0, duration: 0.16, ease: "expo.out" }, t2);
+        var t3 = t2 + 0.16 - F;
+        tl.set("#w4", { opacity: 1, y: 48 }, t3);
+        tl.to("#w4", { y: 0, duration: 0.13, ease: "expo.out" }, t3);
+
+        // Accent rule draws from the right (RTL), brand line follows.
+        tl.fromTo("#rule", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power3.out" }, 1.6);
+        tl.fromTo("#brand", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.45, ease: "back.out(1.4)" }, 1.75);
+
+        // Pattern interrupt: one warm light-leak pass.
+        tl.fromTo("#leak", { opacity: 0 }, { opacity: 0.5, duration: 0.7, ease: "sine.out" }, 2.5);
+        tl.to("#leak", { opacity: 0.28, duration: 0.5, ease: "sine.inOut" }, 3.3);
+        tl.to("#leak", { opacity: 0, duration: 0.8, ease: "sine.in" }, 4.0);
+        tl.fromTo("#leak .leak-amber", { xPercent: -20, scale: 0.92, rotation: -4 }, { xPercent: 18, scale: 1.1, rotation: 2, duration: 2.5, ease: "sine.inOut" }, 2.4);
+        tl.fromTo("#leak .leak-red", { xPercent: 20, yPercent: -8, scale: 1.08 }, { xPercent: -16, yPercent: 8, scale: 0.94, duration: 2.5, ease: "sine.inOut" }, 2.4);
+        tl.fromTo("#leak .leak-gold", { xPercent: -28, rotation: -6 }, { xPercent: 24, rotation: 4, duration: 2.5, ease: "sine.inOut" }, 2.4);
+
+        update(0);
+        window.__timelines["main"] = tl;
+        tl.seek(0);
+      })();
+    </script>
+  </body>
+</html>
