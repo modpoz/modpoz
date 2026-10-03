@@ -19,10 +19,15 @@ kojic acid + turmeric spray) placed in an autumn setting. User's words:
 
 - assets/peelshot-original.webp — user-supplied product photo (bottle + box, white background); the hero.
 - assets/peelshot-cutout.png — background removed (edge-connected white only), used in the composition.
+- assets/autumn-bg.mp4 — natural autumn forest footage generated on Higgsfield (seedance_2_5, 1:1, 5s), transcoded to H.264 1080×1080; the background layer.
 
 ## Customizations
 
 - Short Persian slogan on screen (user accepted the suggested option): «درخشش پاییزی پوست تو».
+
+## Customizations (revision)
+
+- User asked for a natural, moving environment instead of the illustrated one: «تصویر محیط طبیعی باشه و فقط ثابت نباشه عوض شه». Illustrated leaves/bokeh/ghost text removed; real footage + vignette + text scrim added.
 
 ## Notes
 

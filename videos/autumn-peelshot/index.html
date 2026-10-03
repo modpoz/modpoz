@@ -39,12 +39,7 @@
         position: absolute;
         inset: 0;
         overflow: hidden;
-        background: radial-gradient(
-          ellipse 78% 70% at 32% 40%,
-          var(--bg-warm) 0%,
-          var(--bg-mid) 46%,
-          var(--bg-deep) 100%
-        );
+        background: var(--bg-deep);
       }
       #camera {
         position: absolute;
@@ -57,57 +52,28 @@
         inset: 0;
       }
 
-      /* ── background ── */
-      #sun {
+      /* ── background: natural autumn footage ── */
+      #bg-video {
         position: absolute;
-        left: -260px;
-        top: -300px;
-        width: 900px;
-        height: 900px;
-        border-radius: 50%;
-        background: radial-gradient(circle, rgb(255 178 92 / 42%) 0%, rgb(255 120 40 / 14%) 45%, transparent 70%);
-      }
-      .bokeh {
-        position: absolute;
-        border-radius: 50%;
-        filter: blur(5px);
-        will-change: transform, opacity;
-      }
-      #ghost {
-        position: absolute;
-        right: -30px;
-        top: -90px;
-        font-family: "Vazirmatn", sans-serif;
-        font-weight: 900;
-        font-size: 270px;
-        line-height: 1;
-        color: var(--accent);
-        opacity: 0.12;
-        direction: rtl;
-        white-space: nowrap;
-      }
-      #ground {
-        position: absolute;
-        left: -60px;
-        right: -60px;
-        bottom: -40px;
-        height: 330px;
-        background: radial-gradient(ellipse 70% 60% at 40% 100%, rgb(20 7 3 / 92%) 0%, rgb(28 11 6 / 55%) 55%, transparent 80%);
-      }
-      .leaf {
-        position: absolute;
-        left: 0;
-        top: 0;
-        display: block;
-        will-change: transform;
-      }
-      .leaf svg {
-        display: block;
+        inset: 0;
         width: 100%;
         height: 100%;
-        overflow: visible;
+        object-fit: cover;
       }
-
+      #vignette {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse 85% 80% at 45% 50%, transparent 55%, rgb(12 5 2 / 55%) 100%);
+      }
+      #scrim {
+        position: absolute;
+        right: -120px;
+        top: 80px;
+        width: 760px;
+        height: 860px;
+        border-radius: 50%;
+        background: radial-gradient(ellipse at 60% 48%, rgb(22 9 3 / 72%) 0%, rgb(22 9 3 / 48%) 42%, transparent 70%);
+      }
       /* ── product ── */
       #glow {
         position: absolute;
@@ -116,17 +82,17 @@
         width: 760px;
         height: 900px;
         border-radius: 50%;
-        background: radial-gradient(ellipse at 50% 46%, rgb(232 112 28 / 100%) 0%, rgb(190 70 14 / 55%) 38%, transparent 70%);
+        background: radial-gradient(ellipse at 50% 46%, rgb(255 170 80 / 80%) 0%, rgb(220 110 30 / 40%) 38%, transparent 70%);
         opacity: 0;
       }
       #shadow {
         position: absolute;
-        left: 70px;
-        bottom: 66px;
-        width: 440px;
-        height: 54px;
+        left: 30px;
+        bottom: 52px;
+        width: 520px;
+        height: 80px;
         border-radius: 50%;
-        background: radial-gradient(ellipse, rgb(8 3 1 / 80%) 0%, rgb(8 3 1 / 40%) 50%, transparent 72%);
+        background: radial-gradient(ellipse, rgb(6 2 1 / 92%) 0%, rgb(6 2 1 / 55%) 45%, transparent 72%);
         transform-origin: 50% 50%;
       }
       #product-wrap {
@@ -251,36 +217,12 @@
     </style>
   </head>
   <body>
-    <svg width="0" height="0" style="position: absolute" aria-hidden="true">
-      <defs>
-        <symbol id="leaf-maple" viewBox="0 0 100 100">
-          <path
-            d="M50 2 L56 20 L66 12 L64 30 L80 24 L74 40 L94 42 L80 54 L90 62 L68 64 L72 80 L56 72 L52 98 L48 98 L44 72 L28 80 L32 64 L10 62 L20 54 L6 42 L26 40 L20 24 L36 30 L34 12 L44 20 Z"
-          />
-          <path d="M50 92 L50 14 M50 62 L76 32 M50 62 L24 32 M50 72 L70 64 M50 72 L30 64" fill="none" stroke="rgb(60 20 5 / 35%)" stroke-width="2" />
-        </symbol>
-        <symbol id="leaf-oval" viewBox="0 0 100 100">
-          <path d="M50 2 C80 22 84 62 50 92 C16 62 20 22 50 2 Z" />
-          <path d="M50 100 L50 8 M50 40 L68 28 M50 40 L32 28 M50 60 L72 46 M50 60 L28 46" fill="none" stroke="rgb(60 20 5 / 35%)" stroke-width="2" />
-        </symbol>
-        <symbol id="leaf-oak" viewBox="0 0 100 100">
-          <path
-            d="M50 2 C60 8 66 14 62 22 C72 20 76 30 68 36 C80 38 80 50 70 54 C80 60 76 72 64 70 C66 82 58 88 52 86 L52 98 L48 98 L48 86 C42 88 34 82 36 70 C24 72 20 60 30 54 C20 50 20 38 32 36 C24 30 28 20 38 22 C34 14 40 8 50 2 Z"
-          />
-          <path d="M50 92 L50 10" fill="none" stroke="rgb(60 20 5 / 35%)" stroke-width="2" />
-        </symbol>
-      </defs>
-    </svg>
-
     <div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1080">
       <div id="scene">
         <div id="camera" data-layout-allow-overflow>
-          <div id="sun" data-layout-allow-overflow></div>
-          <div id="bokeh" class="layer" data-layout-allow-overflow></div>
-          <div id="ghost" data-layout-allow-overflow>پاییز</div>
-          <div id="leaves-back" class="layer" data-layout-allow-overflow></div>
-          <div id="ground" data-layout-allow-overflow></div>
-          <div id="pile-back" class="layer" data-layout-allow-overflow></div>
+          <video id="bg-video" class="clip" src="assets/autumn-bg.mp4" muted playsinline data-start="0" data-duration="5" data-track-index="0"></video>
+          <div id="vignette"></div>
+          <div id="scrim" data-layout-allow-overflow></div>
 
           <div id="glow" data-layout-allow-overflow></div>
           <div id="shadow"></div>
@@ -289,7 +231,6 @@
               <img src="assets/peelshot-cutout.png" alt="Dr.Melaxin Peel Shot" />
             </div>
           </div>
-          <div id="pile-front" class="layer" data-layout-allow-overflow></div>
 
           <div id="copy">
             <span class="line"><span class="word" id="w1">درخشش</span></span>
@@ -299,7 +240,6 @@
             <span id="brand">DR.MELAXIN · PEEL SHOT</span>
           </div>
 
-          <div id="leaves-front" class="layer" data-layout-allow-overflow></div>
           <div id="leak" aria-hidden="true" data-layout-allow-overflow>
             <div class="leak-layer leak-amber"></div>
             <div class="leak-layer leak-red"></div>
@@ -331,110 +271,18 @@
         var easeOut2 = gsap.parseEase("power2.out");
         var easeSine = gsap.parseEase("sine.inOut");
 
-        var LEAF_SHAPES = ["leaf-maple", "leaf-oval", "leaf-oak"];
-        var LEAF_COLORS = ["#c2410c", "#d9771f", "#b45309", "#e3a33b", "#9a3412", "#e0662a", "#c98a2b", "#7c2d12"];
-        var PILE_COLORS = ["#8a3410", "#9a3412", "#7c2d12", "#a8521a", "#6b250e", "#b4601f"];
-
-        function makeLeaf(parent, i, size, color, shape) {
-          var el = document.createElement("div");
-          el.className = "leaf";
-          el.style.width = size + "px";
-          el.style.height = size + "px";
-          el.innerHTML =
-            '<svg viewBox="0 0 100 100"><use href="#' + shape + '" fill="' + color + '"></use></svg>';
-          parent.appendChild(el);
-          return el;
-        }
-
-        // ── Static leaf bed the product sits on ──
-        var pileBack = document.getElementById("pile-back");
-        for (var p = 0; p < 46; p++) {
-          var ps = 54 + prand(p * 7 + 1) * 66;
-          var px = -50 + prand(p * 11 + 2) * (W + 40);
-          var py = 905 + prand(p * 13 + 3) * 150;
-          var pl = makeLeaf(pileBack, p, ps, PILE_COLORS[p % PILE_COLORS.length], LEAF_SHAPES[p % 3]);
-          pl.style.transform =
-            "translate(" + px + "px," + py + "px) rotate(" + Math.round(prand(p * 17 + 4) * 360) + "deg) scaleY(0.62)";
-        }
-        var pileFront = document.getElementById("pile-front");
-        for (var f = 0; f < 11; f++) {
-          var fs = 62 + prand(f * 19 + 5) * 48;
-          var fx = 20 + prand(f * 23 + 6) * 500;
-          var fy = 985 + prand(f * 29 + 7) * 70;
-          var fl = makeLeaf(pileFront, f, fs, LEAF_COLORS[(f * 3) % LEAF_COLORS.length], LEAF_SHAPES[(f + 1) % 3]);
-          fl.style.transform =
-            "translate(" + fx + "px," + fy + "px) rotate(" + Math.round(prand(f * 31 + 8) * 360) + "deg) scaleY(0.6)";
-        }
-
-        // ── Falling leaves: each one's whole flight is fixed here; position = f(t) ──
-        var MARGIN = 140;
-        var SPAN = H + MARGIN * 2;
-        function makeFallers(parent, count, seed, sizeMin, sizeMax, speedMin, speedMax, xMin, xMax) {
-          var list = [];
-          for (var i = 0; i < count; i++) {
-            var k = seed + i * 10;
-            var size = sizeMin + prand(k + 1) * (sizeMax - sizeMin);
-            list.push({
-              el: makeLeaf(parent, i, size, LEAF_COLORS[(i + seed) % LEAF_COLORS.length], LEAF_SHAPES[(i + seed) % 3]),
-              x0: xMin + prand(k + 2) * (xMax - xMin),
-              y0: prand(k + 3) * SPAN,
-              v: speedMin + prand(k + 4) * (speedMax - speedMin),
-              amp: 22 + prand(k + 5) * 46,
-              w: 1.1 + prand(k + 6) * 1.3,
-              ph: prand(k + 7) * TAU,
-              r0: prand(k + 8) * 360,
-              spin: (prand(k + 9) - 0.5) * 110,
-              flip: 1.4 + prand(k + 10) * 1.6,
-            });
-          }
-          return list;
-        }
-        var backFallers = makeFallers(document.getElementById("leaves-back"), 15, 100, 34, 72, 95, 190, -40, W + 10);
-        var frontFallers = makeFallers(document.getElementById("leaves-front"), 2, 900, 130, 170, 260, 320, -30, 520);
-        frontFallers.forEach(function (lf) {
-          lf.el.style.filter = "blur(5px)";
-        });
-
-        function placeFaller(lf, t) {
-          var y = ((lf.y0 + lf.v * t) % SPAN) - MARGIN;
-          var x = lf.x0 + Math.sin(lf.w * t + lf.ph) * lf.amp;
-          var r = lf.r0 + lf.spin * t;
-          var c = Math.cos(lf.flip * t + lf.ph);
-          var sx = (c < 0 ? -1 : 1) * Math.max(Math.abs(c), 0.22);
-          lf.el.style.transform =
-            "translate(" + x.toFixed(1) + "px," + y.toFixed(1) + "px) rotate(" + r.toFixed(1) + "deg) scaleX(" + sx.toFixed(3) + ")";
-        }
-
-        // ── Warm bokeh ──
-        var bokehLayer = document.getElementById("bokeh");
-        var bokeh = [];
-        for (var b = 0; b < 10; b++) {
-          var bs = 50 + prand(b * 37 + 11) * 130;
-          var el = document.createElement("div");
-          el.className = "bokeh";
-          el.style.width = bs + "px";
-          el.style.height = bs + "px";
-          el.style.left = Math.round(prand(b * 41 + 12) * (W - 60)) + "px";
-          el.style.top = Math.round(40 + prand(b * 43 + 13) * 620) + "px";
-          var warm = b % 2 === 0 ? "255 190 110" : "255 138 60";
-          el.style.background = "radial-gradient(circle, rgb(" + warm + " / 55%) 0%, rgb(" + warm + " / 18%) 55%, transparent 72%)";
-          bokehLayer.appendChild(el);
-          bokeh.push({ el: el, base: 0.35 + prand(b * 47 + 14) * 0.3, ph: prand(b * 53 + 15) * TAU, f: 0.5 + prand(b * 59 + 16) * 0.6 });
-        }
-
         var camera = document.getElementById("camera");
         var floatEl = document.getElementById("product-float");
         var glow = document.getElementById("glow");
-        var ghost = document.getElementById("ghost");
         var grain = document.querySelector("#grain .grain-texture");
 
         // The one writer of every ambient property: a pure function of time.
         function update(t) {
           // multi-phase camera: pull back → hold → slow push, with Lissajous drift
           var s;
-          if (t < 1.4) s = lerp(1.07, 1.0, easeOut2(t / 1.4));
+          if (t < 1.4) s = lerp(1.05, 1.0, easeOut2(t / 1.4));
           else if (t < 3.0) s = 1.0;
-          else s = lerp(1.0, 1.035, easeSine(clamp01((t - 3.0) / 2.0)));
+          else s = lerp(1.0, 1.02, easeSine(clamp01((t - 3.0) / 2.0)));
           var dx = Math.sin(t * TAU * 0.16) * 6;
           var dy = Math.sin(t * TAU * 0.16 * 1.3) * 5;
           camera.style.transform = "scale(" + s.toFixed(4) + ") translate(" + dx.toFixed(2) + "px," + dy.toFixed(2) + "px)";
@@ -447,27 +295,15 @@
           var go, gs;
           if (t < 1.0) {
             var k = easeOut2(clamp01((t - 0.1) / 0.9));
-            go = 0.34 * k;
+            go = 0.26 * k;
             gs = lerp(0.85, 1, k);
           } else {
             var bph = Math.sin(((t - 1.0) * TAU) / 3.0);
-            go = 0.34 + bph * 0.03;
+            go = 0.26 + bph * 0.03;
             gs = 1 + bph * 0.015;
           }
           glow.style.opacity = go.toFixed(3);
           glow.style.transform = "scale(" + gs.toFixed(4) + ")";
-
-          for (var i = 0; i < bokeh.length; i++) {
-            var bk = bokeh[i];
-            var a = t * bk.f + bk.ph;
-            bk.el.style.transform = "translate(" + (Math.sin(a) * 18).toFixed(1) + "px," + (Math.cos(a * 0.8) * 12).toFixed(1) + "px)";
-            bk.el.style.opacity = (bk.base + Math.sin(a * 1.7) * 0.1).toFixed(3);
-          }
-
-          ghost.style.transform = "translateX(" + (-t * 7).toFixed(1) + "px)";
-
-          for (var j = 0; j < backFallers.length; j++) placeFaller(backFallers[j], t);
-          for (var m = 0; m < frontFallers.length; m++) placeFaller(frontFallers[m], t);
 
           var frame = Math.floor(t * 12);
           grain.style.transform =
